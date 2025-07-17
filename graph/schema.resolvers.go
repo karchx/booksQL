@@ -8,29 +8,30 @@ import (
 	"context"
 
 	"github.com/karchx/goQL/graph/model"
+	"github.com/karchx/goQL/models"
 )
 
 // CreateBook is the resolver for the createBook field.
 func (r *mutationResolver) CreateBook(ctx context.Context, input *model.NewBook) (*model.Book, error) {
-	var book model.Book
-	book.Title = input.Title
-	book.Author = input.Author
-	book.PublishedYear = input.PublishedYear
-	return &book, nil
+	book := models.Book{
+		Title:         input.Title,
+		Author:        input.Author,
+		PublishedYear: &input.PublishedYear,
+	}
+
+	if err := r.Handler.CreateBook(&book); err != nil {
+		return nil, err
+	}
+	return book.ToGraphModel(), nil
 }
 
 // Books is the resolver for the books field.
 func (r *queryResolver) Books(ctx context.Context) ([]*model.Book, error) {
-	var books []*model.Book
-
-	dummyBook := model.Book{
-		Title:         "our dummy book",
-		Author:        "bea",
-		PublishedYear: 2024,
+	books, err := r.Handler.GetBooks()
+	if err != nil {
+		return nil, err
 	}
-
-	books = append(books, &dummyBook)
-	return books, nil
+	return models.ToGraphModelBooks(*books), nil
 }
 
 // Mutation returns MutationResolver implementation.
