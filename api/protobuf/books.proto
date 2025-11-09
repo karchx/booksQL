@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package books;
+
+message GetBookRateRecommendationRequest {
+  string user_id = 1;
+}
+
+message GetBookRateRecommendationResponse {
+  repeated string book_ids = 1;
+  float rate = 2;
+}
+
+
+message EmptyResponse {}
+
+
+service UsersService {
+  rpc GetTrainingBalance(GetTrainingBalanceRequest) returns (GetTrainingBalanceResponse) {}
+  rpc UpdateTrainingBalance(UpdateTrainingBalanceRequest) returns (EmptyResponse) {}
+}
