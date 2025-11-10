@@ -5,6 +5,7 @@ import (
 
 	"github.com/karchx/booksQL/internal/books/app"
 	"github.com/karchx/booksQL/internal/books/app/query"
+	"github.com/karchx/booksQL/internal/common/auth"
 )
 
 type HttpServer struct {
@@ -16,7 +17,8 @@ func NewHttpServer(app app.Application) *HttpServer {
 }
 
 func (h HttpServer) GetBooks(w http.ResponseWriter, r *http.Request) {
+	user := auth.User{}
 	var appBooks []query.Book
 
-	appBooks, err := h.app.Queries.BookForUser.Handle(r.Context(), query.BookForUserHandler{})
+	appBooks, err := h.app.Queries.BookForUser.Handle(r.Context(), query.BooksForUser{User: user})
 }
